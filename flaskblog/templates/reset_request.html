@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Alterar Senha</legend>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+
+<!--Percebi que no gmail tem algo relacionado a "acesso menos seguro". É uma proteção da conta onde se você não habilitar esse "acesso menos seguro", 
+os aplicativos de terceiros e não autorizados pela google não poderão realizar envios pelo nosso e-mail.
+
+Faça login na sua conta google que usa como remetente no aplicativo;
+Procure pela opção "Acesso menos seguro", ou entre aqui: https://myaccount.google.com/lesssecureapps;
+Ativa a opção de "Acesso menos seguro" (isso só será possível se sua conta não possuir autenticação por 2 fatores);
+Veja se os envios funcionam agora.-->
