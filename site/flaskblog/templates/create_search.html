@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col"></div>
+    <div class="col-md-6">
+        <form method="POST">
+            <div class="form-group">
+                <label for="{{form.document_type.id}}">{{form.document_type.label.text}}</label>
+                {{form.document_type(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <label for="{{form.number.id}}">{{form.number.label.text}}</label>
+                {{form.number(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <label for="{{form.content.id}}">{{form.content.label.text}}</label>
+                {{form.content(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <label for="{{form.receiver.id}}">{{form.receiver.label.text}}</label>
+                {{form.receiver(class_="form-control")}}
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="{{form.time.id}}">{{form.time.label.text}}</label>
+                    {{form.time(class_="form-control")}}
+                </div>
+                <div class="col-sm-6 mt-3 mt-sm-0">
+                    <label for="{{form.frequency.id}}">{{form.frequency.label.text}}</label>
+                    {{form.frequency(class_="form-control")}}
+                </div>
+            </div>
+            <div class="form-group text-right">
+                {{form.csrf_token}}
+                {{form.submit(class_="btn btn-primary")}}
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock content %}

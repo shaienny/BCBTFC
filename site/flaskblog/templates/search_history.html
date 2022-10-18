@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Histórico de Pesquisa</h1>
+<div class="table-responsive mt-4">
+    <table class="table table-striped table-hover" id="search-history-table">
+        <thead>
+            <tr>
+                <th class="text-center my-auto" scope="col"></th>
+                <th class="text-center my-auto" scope="col">ID</th>
+                <th class="text-center my-auto" scope="col">Tipo de Documento</th>
+                <th class="text-center my-auto" scope="col">Número</th>
+                <th class="text-center my-auto" scope="col">Conteúdo</th>
+                <th class="text-center my-auto" scope="col">Destinatário</th>
+                <th class="text-center my-auto" scope="col">Horário</th>
+                <th class="text-center my-auto" scope="col">Periodicidade (dias)</th>
+                <th class="text-center my-auto" scope="col" style="width: 1px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for search in searchs %}
+            <tr>
+                <td class="text-center my-auto">
+                    <a href="{{url_for('search_history_search_id', search_id=search.id)}}" class="show-search-history text-info">
+                        <i class="fa fa-search" title="Exibir histórico"></i>
+                        <span class="spinner-border spinner-border-sm d-none loading"></span>
+                    </a>
+                </td>
+                <td>{{search.id}}</td>
+                <td>{{search.document_type}}</td>
+                <td class="text-center text-nowrap my-auto">{{search.number if search.number is not none else '-'}}</td>
+                <td class="my-auto">{{search.content}}</td>
+                <td class="my-auto">{{search.receiver}}</td>
+                <td class="text-cente my-autor">{{search.time}}</td>
+                <td class="text-center my-auto">{{search.frequency}}</td>
+                <td class="text-center my-auto">
+                    <form action="{{url_for('pause_continue_search', search_id=search.id, active=not search.active)}}" method="POST">
+                        <button type="submit" class="btn btn-{{'danger' if search.active == 1 else 'success'}} pause-continue">
+                            {{'Pausar' if search.active == 1 else 'Continuar'}}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="history-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="history-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title h5" id="history-modal-label">Histórico</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const history_modal = $('#history-modal');
+        $('#search-history-table').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
+            },
+            order: [
+                [$('#search-history-table th').length - 1, 'desc'],
+                [1, 'desc']
+            ],
+            columnDefs: [
+                {
+                    targets: [0],
+                    orderable: false
+                }
+            ]
+        });
+        $('.show-search-history').on('click', function(e) {
+            e.preventDefault();
+            const $this = $(this);
+            const loading = $this.find('.loading');
+            $.ajax({
+                method: 'GET',
+                url: $this.attr('href'),
+                beforeSend: function() {
+                    $this.addClass('d-none');
+                    loading.removeClass('d-none');
+                },
+                success: function(result) {
+                    history_modal.find('div.modal-body').html(result);
+                    history_modal.modal('show');
+                    $this.removeClass('d-none');
+                    loading.addClass('d-none');
+                },
+                error: function(error) {
+                    console.log(error);
+                    $this.removeClass('d-none');
+                    loading.addClass('d-none');
+                }
+            });
+        });
+    });
+</script>
+{% endblock content %}
